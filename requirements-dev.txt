@@ -1,0 +1,7 @@
+-r requirements.txt
+pytest>=7.0
+
+# optional, only needed for the paths that use them:
+# deepeval        # evalsuite/scorers/deepeval_scorers.py, --use-deepeval
+# anthropic       # evalsuite/judge_provider.py ClaudeJudgeProvider, --judge claude
+# openai          # evalsuite/judge_provider.py OpenAIJudgeProvider, --judge openai

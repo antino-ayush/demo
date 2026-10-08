@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(PYTHONPATH=. .venv/bin/python scripts/run_varuna_gpt.py --help)",
+      "Bash(PYTHONPATH=. .venv/bin/python scripts/run_open_gpt.py --help)",
+      "Bash(mkdir -p /tmp/gptvariant_smoke)",
+      "Bash(python3 -c ' *)",
+      "Bash(PYTHONPATH=. .venv/bin/python scripts/run_varuna_gpt.py --dataset /tmp/gptvariant_smoke/ds.jsonl --skip-generate --judge mock --gpt-variant janes_gpt --db /tmp/gptvariant_smoke/db.sqlite)",
+      "Bash(PYTHONPATH=. .venv/bin/python scripts/run_varuna_gpt.py --dataset /tmp/gptvariant_smoke/ds.jsonl --skip-generate --judge mock --db /tmp/gptvariant_smoke/db2.sqlite)",
+      "Bash(PYTHONPATH=. .venv/bin/python scripts/run_varuna_gpt.py --dataset /tmp/gptvariant_smoke/ds.jsonl --skip-generate --judge mock --gpt-variant varuna --db /tmp/gptvariant_smoke/db3.sqlite)",
+      "Bash(PYTHONPATH=. .venv/bin/python scripts/run_open_gpt.py --dataset /tmp/gptvariant_smoke/ds.jsonl --skip-generate --judge mock --db /tmp/gptvariant_smoke/db4.sqlite)",
+      "Bash(PYTHONPATH=. .venv/bin/python -c ' *)",
+      "Bash(ls output/ && rm -fv output/varuna_gpt_dataset.jsonl output/varuna_gpt_janes_gpt_dataset.jsonl output/varuna_gpt_run.log output/varuna_gpt_janes_gpt_run.log && rm -rf /tmp/gptvariant_smoke && echo \"--- output/ after cleanup ---\" && ls output/)",
+      "Bash(python3 -m py_compile evalsuite/*.py scripts/*.py tests/*.py)",
+      "Bash(PYTHONPATH=. .venv/bin/python -m pytest -q)"
+    ],
+    "additionalDirectories": [
+      "/private/tmp/gptvariant_smoke"
+    ]
+  }
+}

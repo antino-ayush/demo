@@ -1,0 +1,30 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="redis" />
+          <option value="fastapi" />
+          <option value="uvicorn" />
+          <option value="pydantic" />
+          <option value="sqlalchemy" />
+          <option value="sqlmodel" />
+          <option value="alembic" />
+          <option value="asyncpg" />
+          <option value="boto3" />
+          <option value="pyyaml" />
+          <option value="httpx" />
+          <option value="greenlet" />
+          <option value="torch" />
+          <option value="transformers" />
+          <option value="accelerate" />
+          <option value="trl" />
+          <option value="peft" />
+          <option value="datasets" />
+          <option value="safetensors" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

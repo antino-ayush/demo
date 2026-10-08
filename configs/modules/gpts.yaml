@@ -1,0 +1,52 @@
+# gpts: shared contract for the dashboard-hosted GPT family (gpts/dashboard/*)
+# -- multiple real dashboards (varuna-chat, janes-doc, ...) live behind the
+# same endpoint/token/criteria/response format, differing only in a couple of
+# request field values selected at run time via --gpt-variant (see
+# evalsuite/request_schemas.py's GPT_VARIANTS). Real endpoint
+# /api/chat/chatbot/query, request shape confirmed from a live
+# browser-captured curl against this host (same SERVICE_BASE_URL and
+# DEFAULT_SERVICE_TOKEN as open_gpt, different path/contract -- see
+# evalsuite/generator.py's module docstring for why each module gets its own
+# contract here rather than sharing open_gpt's).
+module: gpts
+# Real API routes / service names that should be scored against this module.
+endpoints:
+  - /api/chat/chatbot/query
+criteria: [correctness, relevancy]
+weights:
+  correctness: 0.6
+  relevancy: 0.4
+thresholds:
+  correctness: 0.7
+  relevancy: 0.5
+
+# Request/response JSON contract for this module's service-under-test
+# endpoint (URL = SERVICE_BASE_URL + endpoints[0] above, unless overridden
+# with service.url). See evalsuite/generator.py's module docstring for the
+# full placeholder syntax ({input}, {row_id}, {module}, {uuid}, {env:VAR})
+# and for the optional url/token/verify_ssl/timeout overrides this block can
+# also carry. profile/module below are the "varuna" variant's values (the
+# default -- see evalsuite/request_schemas.py's GPT_VARIANTS -- --gpt-variant
+# overrides them at run time with a patched copy of this file, this file
+# itself is never edited to switch variants).
+service:
+  verify_ssl: false
+  # No token override -- uses the shared DEFAULT_SERVICE_TOKEN (.env). The
+  # captured curl this contract was built from used a different token, but
+  # that was just a different login session, not evidence this module needs
+  # its own credential.
+  request_template:
+    profile: "ADMINISTRATION"
+    question: "{input}"
+    module: "ALL_DOCUMENTS"
+    session_id: "{uuid}"
+    regenerate: false
+    turn_id: "{uuid}"
+    generation_id: "{uuid}"
+  # CONFIRMED against a live 200 response: this streams SSE like open_gpt's
+  # endpoint does (event: token / data: {"status":"streaming","answer":"..."}
+  # chunks, ending in a {"status":"complete",...} marker with no "answer"
+  # key -- correctly skipped by _concat_sse_stream since it only concatenates
+  # string values under this key). Per-chunk key is "answer", not "data" like
+  # open_gpt's.
+  response_stream_key: answer

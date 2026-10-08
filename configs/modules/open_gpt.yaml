@@ -1,0 +1,44 @@
+# open_gpt: general-knowledge / reasoning chatbot on the shared
+# offline_chatbot/local_llm endpoint (dashboard: gpts/open-gpt). A single
+# golden answer per question, correctness against that answer is the main
+# signal. The dataset also includes summary/procedure/log-style rows with a
+# `context` passage (embedded in `input` too, since this module's service
+# does no retrieval of its own) -- completeness checks that all golden facts
+# survive, faithfulness checks the generated answer doesn't add claims
+# unsupported by that context. Rows with no context still score under
+# faithfulness/completeness, just judged against the golden answer alone.
+module: open_gpt
+# Real API routes / service names that should be scored against this module.
+endpoints:
+  - /api/offline_chatbot/local_llm
+criteria: [correctness, completeness, faithfulness]
+weights:
+  correctness: 0.5
+  completeness: 0.25
+  faithfulness: 0.25
+thresholds:
+  correctness: 0.7
+  completeness: 0.6
+  faithfulness: 0.7
+
+# Per-module overrides for the service-under-test call (URL comes from
+# SERVICE_BASE_URL + endpoints[0] above; token from DEFAULT_SERVICE_TOKEN
+# unless overridden here). No request_template -- this module uses the
+# default question/module/session_id request. The response isn't a single
+# JSON object though: the server streams back-to-back
+# {"status": "streaming", "data": "<token>"} chunks ending in a
+# {"status": "complete", ...} marker, so response_stream_key concatenates
+# every chunk's "data" field instead of using response_path (see
+# evalsuite/generator.py's docstring).
+service:
+  verify_ssl: false
+  offline_gpt_id: 6a828b5a6a0b4e84c2281cec
+  response_stream_key: data
+  # This deployment enforces 30 requests/minute per token (X-RateLimit-Limit-Minute
+  # response header) and, observed firsthand, responds to sustained bursts past
+  # that with temporary 401s on the token rather than just 429ing individual
+  # requests -- so this paces every generate call (across all --generate-workers
+  # and all batches) to stay safely under it, instead of relying on reactive
+  # 429 retries alone. 25 leaves headroom for the judge/other traffic sharing
+  # the same quota; raise cautiously if this deployment's limit changes.
+  max_requests_per_minute: 25

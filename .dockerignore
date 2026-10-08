@@ -1,0 +1,12 @@
+.venv/
+venv/
+.git/
+.idea/
+.vscode/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+eval_results.db
+*.db
+.DS_Store
