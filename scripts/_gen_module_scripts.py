@@ -25,6 +25,10 @@ with the rest of its chunk (pass --no-pipeline for the simpler, fully
 batch-wise/sequential mode instead). See evalsuite/batch_runner.py
 (`run_streaming` / `run_in_batches`) for the pipeline itself. Row-wise
 hand-off matters when the judge is the slow/unreliable side: with
+
+
+abc
+
 batch-level hand-off, one stuck row anywhere in a batch delays every other
 row in that batch from even starting; here a stuck row only blocks itself.
 
