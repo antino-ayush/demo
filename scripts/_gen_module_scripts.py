@@ -17,6 +17,11 @@ MODULES = {
 TEMPLATE = '''#!/usr/bin/env python3
 """Single-command test runner for the '{module}' module.
 
+
+
+
+
+skdjhfjsd
 Does both steps end-to-end, in one command. Generation still happens in
 fixed-size BATCHES (default 50 rows, up to --generate-workers HTTP calls at
 once against {endpoints}, per configs/modules/{module}.yaml), but each row
